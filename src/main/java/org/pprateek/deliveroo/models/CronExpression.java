@@ -11,9 +11,26 @@ public class CronExpression {
     private String command;
 
     public CronExpression(String arg) throws InvalidCronExpressionException {
+
         String[] cronMembers = arg.split("\\s+");
 
-        if(cronMembers.length != 6)
+        if(cronMembers.length == 2) {
+            // Check for @yearly, @monthly, @weekly, @daily, @hourly extensions
+            String extensionName = cronMembers[0];
+            if(extensionName.equals("@yearly"))
+                cronMembers = String.format("0 0 1 1 * %s", cronMembers[1]).split("\\s+");
+            else if(extensionName.equals("@monthly"))
+                cronMembers = String.format("0 0 1 * * %s", cronMembers[1]).split("\\s+");
+            else if(extensionName.equals("@weekly"))
+                cronMembers = String.format("0 0 * * 0 %s", cronMembers[1]).split("\\s+");
+            else if(extensionName.equals("@daily"))
+                cronMembers = String.format("0 0 * * * %s", cronMembers[1]).split("\\s+");
+            else if(extensionName.equals("@hourly"))
+                cronMembers = String.format("0 * * * * %s", cronMembers[1]).split("\\s+");
+            else
+                throw new InvalidCronExpressionException("Invalid cron extension, it must be from one of @yearly, @monthly, @weekly, @daily, @hourly");
+        }
+        else if(cronMembers.length != 6)
             throw new InvalidCronExpressionException(String.format("Expected [minutes] [hours] [day-of-month] [month] [day-of-week], but got %s", arg));
 
         this.minutes = new MinutesCronField(cronMembers[0]);
