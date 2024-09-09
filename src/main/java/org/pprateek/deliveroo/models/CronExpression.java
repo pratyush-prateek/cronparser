@@ -3,6 +3,8 @@ package org.pprateek.deliveroo.models;
 import org.pprateek.deliveroo.exceptions.InvalidCronExpressionException;
 
 public class CronExpression {
+    // 5-2 = 5 6 0 1 2
+    // 2,5,10 - 2/10,5,MON-WED
     private CronField minutes;
     private CronField hours;
     private CronField dayOfMonth;

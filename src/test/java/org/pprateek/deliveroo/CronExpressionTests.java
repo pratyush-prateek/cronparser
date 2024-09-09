@@ -18,6 +18,12 @@ public class CronExpressionTests {
     }
 
     @Test
+    public void testValidWrapAroundRanges() throws InvalidCronExpressionException {
+        CronField cronField = new DayOfWeekCronField("5-2");
+        Assertions.assertEquals("5 6 0 1 2", cronField.toString());
+    }
+
+    @Test
     public void testInvalidRanges() {
         assertException(() -> {
             new MinutesCronField("10-100");
